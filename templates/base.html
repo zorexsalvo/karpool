@@ -17,17 +17,48 @@
         /* Lighter window mockup backgrounds */
         .mockup-window { @apply border bg-base-100; }
         .mockup-window > div { @apply bg-base-50; }
+        
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            text-align: center;
+            gap: 0.25rem;
+        }
+        
+        .logo-main {
+            font-size: 2rem;
+            font-weight: bold;
+            color: hsl(var(--p));
+            margin: 0;
+            line-height: 1;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.8rem;
+            color: hsl(var(--bc) / 0.6);
+            font-weight: 400;
+            font-style: italic;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
     </style>
 </head>
 <body class="bg-base-100">
     <div class="navbar bg-base-100 shadow-sm border-b border-base-300">
         <div class="navbar-start">
-            <a href="{% url 'home' %}" class="btn btn-ghost text-xl font-bold text-primary">
-                Carpool
-            </a>
+            <!-- Empty for spacing -->
         </div>
         <div class="navbar-center">
-            <!-- Optional: Add center content here -->
+            <a href="{% url 'home' %}" class="btn btn-ghost p-4">
+                <div class="logo-container">
+                    <div class="logo-main">/kär po͞ol/</div>
+                    <div class="logo-subtitle">by RWP Rizal</div>
+                </div>
+            </a>
         </div>
         <div class="navbar-end">
             <!-- Optional: Add menu items here -->
