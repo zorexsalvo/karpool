@@ -4,39 +4,39 @@
 
 {% block content %}
 <!-- Event Header -->
-<div class="mb-6">
-    <h1 class="text-4xl font-bold mb-2">{{ event.name }}</h1>
+<div class="mb-5">
+    <h1 class="text-2xl font-bold mb-1">{{ event.name }}</h1>
     
     {% if event.date or event.location %}
-    <div class="text-base-content/70 mb-4">
+    <div class="text-base-content/70 text-sm mb-3">
         {% if event.date %}{{ event.date|date:"M d, Y" }}{% endif %}
         {% if event.date and event.location %} • {% endif %}
         {% if event.location %}{{ event.location }}{% endif %}
     </div>
     {% endif %}
 
-    <div class="flex gap-2 mb-6">
+    <div class="flex gap-1 mb-4">
         <input type="text" value="{{ request.build_absolute_uri }}" readonly 
-               id="event-url" class="input input-bordered flex-1 text-sm">
-        <button onclick="copyUrl()" class="btn btn-outline">Copy Link</button>
+               id="event-url" class="input input-bordered input-xs flex-1 text-xs font-mono">
+        <button onclick="copyUrl()" class="btn btn-outline btn-xs text-xs">Copy</button>
     </div>
 </div>
 
 <!-- Main Layout -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     <!-- Cars List - Left Side (2/3 width) -->
-    <div class="lg:col-span-2 space-y-4">
-        <h2 class="text-2xl font-semibold mb-4">Cars</h2>
+    <div class="lg:col-span-2 space-y-3">
+        <h2 class="text-lg font-semibold mb-3">Cars</h2>
         
         {% for car in cars %}
         <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body">
-                <div class="flex justify-between items-start mb-4">
+            <div class="card-body p-4">
+                <div class="flex justify-between items-start mb-3">
                     <div>
-                        <h3 class="font-bold text-lg">{{ car.driver_name }}</h3>
-                        {% if car.car_name %}<p class="text-base-content/70">{{ car.car_name }}</p>{% endif %}
+                        <h3 class="font-semibold">{{ car.driver_name }}</h3>
+                        {% if car.car_name %}<p class="text-base-content/70 text-sm">{{ car.car_name }}</p>{% endif %}
                         {% if car.capacity %}
-                            <div class="badge badge-outline mt-1">
+                            <div class="badge badge-outline badge-sm mt-1">
                                 {{ car.members.count }}/{{ car.capacity }} seats
                                 {% if car.available_spots > 0 %}
                                     • {{ car.available_spots }} available
@@ -48,41 +48,41 @@
                     </div>
                     <form method="post" action="{% url 'delete_car' event.slug car.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-ghost btn-sm text-error" 
+                        <button type="submit" class="btn btn-ghost btn-xs text-error" 
                                 onclick="return confirm('Delete car?')">×</button>
                     </form>
                 </div>
                 
                 {% if car.notes %}
-                    <div class="text-base-content/70 text-sm mb-4 p-3 bg-base-200 rounded">{{ car.notes }}</div>
+                    <div class="text-base-content/70 text-xs mb-3 p-2 bg-base-200 rounded">{{ car.notes }}</div>
                 {% endif %}
                 
-                <div class="grid gap-2">
+                <div class="space-y-2">
                     {% for member in car.members.all %}
-                        <div class="flex justify-between items-center p-3 bg-base-200 rounded">
+                        <div class="flex justify-between items-center p-2 bg-base-200 rounded text-sm">
                             <div>
                                 <div class="font-medium">{{ member.name }}</div>
-                                {% if member.contact %}<div class="text-sm text-base-content/70">{{ member.contact }}</div>{% endif %}
+                                {% if member.contact %}<div class="text-xs text-base-content/70">{{ member.contact }}</div>{% endif %}
                             </div>
                             <div class="flex gap-1">
                                 <button onclick="showMoveModal({{ member.id }}, '{{ member.name }}')" 
-                                        class="btn btn-ghost btn-xs">Move</button>
+                                        class="btn btn-ghost btn-xs text-xs">Move</button>
                                 <form method="post" action="{% url 'delete_member' event.slug member.id %}" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-ghost btn-xs text-error" 
+                                    <button type="submit" class="btn btn-ghost btn-xs text-error text-xs" 
                                             onclick="return confirm('Remove {{ member.name }}?')">×</button>
                                 </form>
                             </div>
                         </div>
                     {% empty %}
-                        <div class="text-center text-base-content/50 py-4">No members in this car yet</div>
+                        <div class="text-center text-base-content/50 text-sm py-3">No members in this car yet</div>
                     {% endfor %}
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body text-center text-base-content/50">
+            <div class="card-body p-4 text-center text-base-content/50 text-sm">
                 <p>No cars added yet</p>
             </div>
         </div>
@@ -90,22 +90,22 @@
 
         <!-- Unassigned Members -->
         {% if unassigned_members %}
-        <div class="card bg-base-100 shadow-sm border border-base-300 mt-6">
-            <div class="card-body">
-                <h3 class="font-bold text-lg mb-4">Unassigned Members</h3>
-                <div class="grid gap-2">
+        <div class="card bg-base-100 shadow-sm border border-base-300 mt-4">
+            <div class="card-body p-4">
+                <h3 class="font-semibold mb-3">Unassigned Members</h3>
+                <div class="space-y-2">
                     {% for member in unassigned_members %}
-                        <div class="flex justify-between items-center p-3 bg-base-200 rounded">
+                        <div class="flex justify-between items-center p-2 bg-base-200 rounded text-sm">
                             <div>
                                 <div class="font-medium">{{ member.name }}</div>
-                                {% if member.contact %}<div class="text-sm text-base-content/70">{{ member.contact }}</div>{% endif %}
+                                {% if member.contact %}<div class="text-xs text-base-content/70">{{ member.contact }}</div>{% endif %}
                             </div>
                             <div class="flex gap-1">
                                 <button onclick="showMoveModal({{ member.id }}, '{{ member.name }}')" 
-                                        class="btn btn-ghost btn-xs">Assign</button>
+                                        class="btn btn-ghost btn-xs text-xs">Assign</button>
                                 <form method="post" action="{% url 'delete_member' event.slug member.id %}" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-ghost btn-xs text-error" 
+                                    <button type="submit" class="btn btn-ghost btn-xs text-error text-xs" 
                                             onclick="return confirm('Remove {{ member.name }}?')">×</button>
                                 </form>
                             </div>
@@ -118,57 +118,57 @@
     </div>
 
     <!-- Right Sidebar - Forms -->
-    <div class="space-y-6">
+    <div class="space-y-4">
         <!-- Add Car Form -->
         <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body">
-                <h3 class="card-title text-lg mb-4">Add Car</h3>
-                <form method="post" action="{% url 'add_car' event.slug %}" class="space-y-3">
+            <div class="card-body p-4">
+                <h3 class="font-semibold text-sm mb-3">Add Car</h3>
+                <form method="post" action="{% url 'add_car' event.slug %}" class="space-y-2">
                     {% csrf_token %}
                     <div class="form-control">
                         <input type="text" name="driver_name" placeholder="Driver name" 
-                               class="input input-bordered input-sm" required>
+                               class="input input-bordered input-xs text-sm" required>
                     </div>
                     <div class="form-control">
                         <input type="text" name="car_name" placeholder="Car name (optional)" 
-                               class="input input-bordered input-sm">
+                               class="input input-bordered input-xs text-sm">
                     </div>
                     <div class="form-control">
                         <input type="number" name="capacity" placeholder="Seats" min="1" 
-                               class="input input-bordered input-sm">
+                               class="input input-bordered input-xs text-sm">
                     </div>
                     <div class="form-control">
                         <textarea name="notes" placeholder="Notes (optional)" rows="2" 
-                                  class="textarea textarea-bordered textarea-sm"></textarea>
+                                  class="textarea textarea-bordered textarea-xs text-sm resize-none"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm w-full">Add Car</button>
+                    <button type="submit" class="btn btn-primary btn-xs w-full text-xs">Add Car</button>
                 </form>
             </div>
         </div>
 
         <!-- Join Event Form -->
         <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body">
-                <h3 class="card-title text-lg mb-4">Join Event</h3>
-                <form method="post" action="{% url 'add_member' event.slug %}" class="space-y-3">
+            <div class="card-body p-4">
+                <h3 class="font-semibold text-sm mb-3">Join Event</h3>
+                <form method="post" action="{% url 'add_member' event.slug %}" class="space-y-2">
                     {% csrf_token %}
                     <div class="form-control">
                         <input type="text" name="name" placeholder="Your name" 
-                               class="input input-bordered input-sm" required>
+                               class="input input-bordered input-xs text-sm" required>
                     </div>
                     <div class="form-control">
                         <input type="text" name="contact" placeholder="Contact (optional)" 
-                               class="input input-bordered input-sm">
+                               class="input input-bordered input-xs text-sm">
                     </div>
                     <div class="form-control">
-                        <select name="car" class="select select-bordered select-sm">
+                        <select name="car" class="select select-bordered select-xs text-sm">
                             <option value="">No car yet</option>
                             {% for car in cars %}
                                 <option value="{{ car.id }}">{{ car.driver_name }}{% if car.car_name %} ({{ car.car_name }}){% endif %}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm w-full">Join</button>
+                    <button type="submit" class="btn btn-primary btn-xs w-full text-xs">Join</button>
                 </form>
             </div>
         </div>
@@ -177,24 +177,24 @@
 
 <!-- Move Member Modal -->
 <dialog id="moveModal" class="modal">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4" id="modalTitle">Move Member</h3>
-        <form method="post" id="moveForm" class="space-y-4">
+    <div class="modal-box max-w-xs">
+        <h3 class="font-semibold text-sm mb-3" id="modalTitle">Move Member</h3>
+        <form method="post" id="moveForm" class="space-y-3">
             {% csrf_token %}
             <div class="form-control">
-                <label class="label">
-                    <span class="label-text">Assign to:</span>
+                <label class="label py-1">
+                    <span class="label-text text-xs">Assign to:</span>
                 </label>
-                <select name="car" id="carSelect" class="select select-bordered">
+                <select name="car" id="carSelect" class="select select-bordered select-sm text-sm">
                     <option value="">Unassigned</option>
                     {% for car in cars %}
                         <option value="{{ car.id }}">{{ car.driver_name }}{% if car.car_name %} ({{ car.car_name }}){% endif %}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="modal-action">
-                <button type="button" onclick="hideMoveModal()" class="btn">Cancel</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+            <div class="modal-action pt-2">
+                <button type="button" onclick="hideMoveModal()" class="btn btn-sm text-xs">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm text-xs">Update</button>
             </div>
         </form>
     </div>
