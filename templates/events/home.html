@@ -3,37 +3,60 @@
 {% block title %}Create Event - Carpool{% endblock %}
 
 {% block content %}
-<h1>Create Carpool Event</h1>
+<div class="max-w-2xl mx-auto">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h1 class="card-title text-3xl mb-4">Create Carpool Event</h1>
+            
+            <p class="text-base-content/70 mb-6">Create a shareable carpool event. Anyone with the link can join and manage rides.</p>
 
-<p>Create a shareable carpool event. Anyone with the link can join and manage rides.</p>
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                
+                <div class="form-control">
+                    <label class="label" for="{{ form.name.id_for_label }}">
+                        <span class="label-text font-medium">Event Name *</span>
+                    </label>
+                    <input type="text" name="name" id="{{ form.name.id_for_label }}" 
+                           placeholder="Event name" class="input input-bordered w-full" required>
+                    {% for error in form.name.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error">{{ error }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
 
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="form-group">
-        <label for="{{ form.name.id_for_label }}">Event Name *</label>
-        {{ form.name }}
-        {% for error in form.name.errors %}
-            <div style="color: #dc3545; font-size: 0.9em;">{{ error }}</div>
-        {% endfor %}
+                <div class="form-control">
+                    <label class="label" for="{{ form.date.id_for_label }}">
+                        <span class="label-text font-medium">Date</span>
+                    </label>
+                    <input type="date" name="date" id="{{ form.date.id_for_label }}" 
+                           class="input input-bordered w-full">
+                    {% for error in form.date.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error">{{ error }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <div class="form-control">
+                    <label class="label" for="{{ form.location.id_for_label }}">
+                        <span class="label-text font-medium">Location</span>
+                    </label>
+                    <input type="text" name="location" id="{{ form.location.id_for_label }}" 
+                           placeholder="Event location (optional)" class="input input-bordered w-full">
+                    {% for error in form.location.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error">{{ error }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <div class="form-control mt-6">
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="{{ form.date.id_for_label }}">Date</label>
-        <input type="date" name="date" id="{{ form.date.id_for_label }}">
-        {% for error in form.date.errors %}
-            <div style="color: #dc3545; font-size: 0.9em;">{{ error }}</div>
-        {% endfor %}
-    </div>
-
-    <div class="form-group">
-        <label for="{{ form.location.id_for_label }}">Location</label>
-        {{ form.location }}
-        {% for error in form.location.errors %}
-            <div style="color: #dc3545; font-size: 0.9em;">{{ error }}</div>
-        {% endfor %}
-    </div>
-
-    <button type="submit" class="btn btn-primary">Create Event</button>
-</form>
+</div>
 {% endblock %}
