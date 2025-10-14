@@ -45,6 +45,43 @@
             padding: 0;
             line-height: 1;
         }
+        
+        /* Form fixes for DaisyUI v5 alignment issues */
+        .form-control {
+            width: 100%;
+        }
+        
+        .input, .select, .textarea {
+            width: 100%;
+            display: block;
+        }
+        
+        .label {
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+        
+        .label-text {
+            flex: 1;
+        }
+        
+        /* Ensure buttons maintain proper spacing */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Fix modal form alignment */
+        .modal-box .form-control {
+            margin-bottom: 1rem;
+        }
+        
+        /* Fix select dropdown width */
+        .select select {
+            width: 100%;
+        }
     </style>
 </head>
 <body class="bg-base-100">
