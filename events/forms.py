@@ -9,9 +9,9 @@ class EventCreateForm(forms.ModelForm):
         model = Event
         fields = ['name', 'date', 'location']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Event name'}),
-            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Event location (optional)'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Event name'}),
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'location': forms.TextInput(attrs={'placeholder': 'Event location (optional)'}),
         }
 
 
@@ -22,10 +22,10 @@ class CarCreateForm(forms.ModelForm):
         model = Car
         fields = ['driver_name', 'car_name', 'capacity', 'notes']
         widgets = {
-            'driver_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Driver's name"}),
-            'car_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Car name/label (optional)'}),
-            'capacity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Number of seats', 'min': 1}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Additional notes (optional)'}),
+            'driver_name': forms.TextInput(attrs={'placeholder': "Driver's name"}),
+            'car_name': forms.TextInput(attrs={'placeholder': 'Car name/label (optional)'}),
+            'capacity': forms.NumberInput(attrs={'placeholder': 'Number of seats', 'min': 1}),
+            'notes': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Additional notes (optional)'}),
         }
 
 
@@ -36,9 +36,8 @@ class MemberCreateForm(forms.ModelForm):
         model = Member
         fields = ['name', 'contact', 'car']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your name'}),
-            'contact': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contact info (optional)'}),
-            'car': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Your name'}),
+            'contact': forms.TextInput(attrs={'placeholder': 'Contact info (optional)'}),
         }
     
     def __init__(self, *args, **kwargs):
@@ -57,9 +56,6 @@ class MemberUpdateForm(forms.ModelForm):
     class Meta:
         model = Member
         fields = ['car']
-        widgets = {
-            'car': forms.Select(attrs={'class': 'form-control'}),
-        }
     
     def __init__(self, *args, **kwargs):
         event = kwargs.pop('event', None)
