@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.name }} - Carpool Management{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">
+                    <i class="bi bi-calendar-event text-primary"></i>
+                    {{ event.name }}
+                </h1>
+                
+                <div class="row">
+                    {% if event.date %}
+                        <div class="col-sm-6 mb-2">
+                            <strong><i class="bi bi-calendar3"></i> Date:</strong> {{ event.date|date:"F d, Y" }}
+                        </div>
+                    {% endif %}
+                    {% if event.location %}
+                        <div class="col-sm-6 mb-2">
+                            <strong><i class="bi bi-geo-alt"></i> Location:</strong> {{ event.location }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+                        <input type="text" class="form-control" value="{{ request.build_absolute_uri }}" readonly id="event-url">
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyEventUrl()">
+                            <i class="bi bi-clipboard"></i> Copy Link
+                        </button>
+                    </div>
+                    <div class="form-text">Share this link with participants to let them join the carpool</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Cars Section -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="bi bi-car-front"></i> Cars & Riders</h4>
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                    <i class="bi bi-plus"></i> Add Car
+                </button>
+            </div>
+            <div class="card-body">
+                {% if cars %}
+                    {% for car in cars %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h6 class="mb-0">
+                                            <i class="bi bi-person-check text-success"></i>
+                                            {{ car.driver_name }}{% if car.car_name %} ({{ car.car_name }}){% endif %}
+                                        </h6>
+                                        {% if car.capacity %}
+                                            <small class="text-muted">
+                                                Capacity: {{ car.members.count }}/{{ car.capacity }} seats
+                                                {% if car.available_spots > 0 %}
+                                                    <span class="text-success">({{ car.available_spots }} available)</span>
+                                                {% elif car.available_spots == 0 %}
+                                                    <span class="text-warning">(Full)</span>
+                                                {% endif %}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                        <form method="post" action="{% url 'delete_car' event.slug car.id %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                                    onclick="return confirm('Delete this car? Members will be moved to unassigned.')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {% if car.notes %}
+                                    <p class="text-muted small"><strong>Notes:</strong> {{ car.notes }}</p>
+                                {% endif %}
+                                
+                                {% if car.members.all %}
+                                    <div class="row">
+                                        {% for member in car.members.all %}
+                                            <div class="col-sm-6 col-lg-4 mb-2">
+                                                <div class="d-flex align-items-center justify-content-between border rounded p-2">
+                                                    <div>
+                                                        <strong>{{ member.name }}</strong>
+                                                        {% if member.contact %}
+                                                            <br><small class="text-muted">{{ member.contact }}</small>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-outline-secondary btn-sm" 
+                                                                data-bs-toggle="modal" data-bs-target="#updateMemberModal{{ member.id }}">
+                                                            <i class="bi bi-arrow-left-right"></i>
+                                                        </button>
+                                                        <form method="post" action="{% url 'delete_member' event.slug member.id %}" style="display: inline;">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                                                    onclick="return confirm('Remove {{ member.name }}?')">
+                                                                <i class="bi bi-x"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted mb-0"><i class="bi bi-info-circle"></i> No members assigned to this car yet</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted text-center">
+                        <i class="bi bi-car-front-fill display-4 text-muted d-block mb-2"></i>
+                        No cars added yet. Click "Add Car" to get started!
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Add Member Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-person-plus"></i> Join Event</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'add_member' event.slug %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ member_form.name.id_for_label }}" class="form-label">Your Name *</label>
+                        {{ member_form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ member_form.contact.id_for_label }}" class="form-label">Contact Info</label>
+                        {{ member_form.contact }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ member_form.car.id_for_label }}" class="form-label">Choose Car</label>
+                        {{ member_form.car }}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-plus-circle"></i> Join Event
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Unassigned Members -->
+        {% if unassigned_members %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-people"></i> Unassigned Members</h5>
+                </div>
+                <div class="card-body">
+                    {% for member in unassigned_members %}
+                        <div class="d-flex align-items-center justify-content-between border rounded p-2 mb-2">
+                            <div>
+                                <strong>{{ member.name }}</strong>
+                                {% if member.contact %}
+                                    <br><small class="text-muted">{{ member.contact }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary btn-sm" 
+                                        data-bs-toggle="modal" data-bs-target="#updateMemberModal{{ member.id }}">
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+                                <form method="post" action="{% url 'delete_member' event.slug member.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                            onclick="return confirm('Remove {{ member.name }}?')">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Car Modal -->
+<div class="modal fade" id="addCarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'add_car' event.slug %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Car</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="{{ car_form.driver_name.id_for_label }}" class="form-label">Driver Name *</label>
+                        {{ car_form.driver_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ car_form.car_name.id_for_label }}" class="form-label">Car Name/Label</label>
+                        {{ car_form.car_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ car_form.capacity.id_for_label }}" class="form-label">Capacity (seats)</label>
+                        {{ car_form.capacity }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ car_form.notes.id_for_label }}" class="form-label">Notes</label>
+                        {{ car_form.notes }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Car</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Member Update Modals -->
+{% for member in event.members.all %}
+    <div class="modal fade" id="updateMemberModal{{ member.id }}" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <form method="post" action="{% url 'update_member' event.slug member.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h6 class="modal-title">Move {{ member.name }}</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="form-label">Assign to Car:</label>
+                        <select name="car" class="form-control">
+                            <option value="">Unassigned</option>
+                            {% for car in cars %}
+                                <option value="{{ car.id }}" {% if member.car.id == car.id %}selected{% endif %}>
+                                    {{ car.driver_name }}{% if car.car_name %} ({{ car.car_name }}){% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyEventUrl() {
+    const urlInput = document.getElementById('event-url');
+    urlInput.select();
+    urlInput.setSelectionRange(0, 99999);
+    
+    try {
+        document.execCommand('copy');
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="bi bi-check"></i> Copied!';
+        button.classList.add('btn-success');
+        button.classList.remove('btn-outline-secondary');
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-secondary');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+    }
+}
+</script>
+{% endblock %}

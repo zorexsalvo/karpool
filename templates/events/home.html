@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Carpool Event - Carpool Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4">
+                    <i class="bi bi-calendar-plus text-primary"></i>
+                    Create Carpool Event
+                </h1>
+                
+                <p class="text-muted text-center mb-4">
+                    Create a new carpool event and get a shareable link that anyone can use to join and organize rides.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Event Name *</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.name.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.date.id_for_label }}" class="form-label">Event Date</label>
+                        {{ form.date }}
+                        {% if form.date.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.date.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.location.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Event
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-4 p-3 bg-light rounded">
+                    <h6 class="mb-2"><i class="bi bi-info-circle text-info"></i> How it works:</h6>
+                    <ul class="small mb-0">
+                        <li>Create your event and get a unique shareable link</li>
+                        <li>Share the link with participants - no accounts needed</li>
+                        <li>Anyone with the link can add cars, join rides, or manage assignments</li>
+                        <li>Real-time coordination for your carpool event</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
