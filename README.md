@@ -31,32 +31,71 @@ A Django-based web application for organizing and managing carpool events. No us
 
 ## 🚀 Quick Start
 
-### 1. Clone and Setup
+### Option 1: Docker (Recommended)
+
+#### Prerequisites
+- Docker and Docker Compose installed
+
+#### 1. Clone and Build
+```bash
+git clone <repository-url>
+cd carpool
+make build
+```
+
+#### 2. Start the Application
+```bash
+make up
+```
+
+#### 3. Access the Application
+- **Main App**: http://localhost:8000/
+- **Admin Interface**: http://localhost:8000/admin/
+
+#### Docker Commands
+```bash
+make up          # Start the application
+make up-d        # Start in background
+make down        # Stop the application
+make logs        # View logs
+make shell       # Open shell in container
+make migrate     # Run migrations
+make clean       # Clean up containers and volumes
+make help        # Show all available commands
+```
+
+### Option 2: Local Development
+
+#### Prerequisites
+- Python 3.11+
+- uv package manager
+
+#### 1. Clone and Setup
 ```bash
 git clone <repository-url>
 cd carpool
 ```
 
-### 2. Install Dependencies
+#### 2. Install Dependencies
 ```bash
 uv add django
 ```
 
-### 3. Database Setup
+#### 3. Database Setup
 ```bash
 source .venv/bin/activate
 python manage.py migrate
 python manage.py createsuperuser  # Optional: for admin access
 ```
 
-### 4. Run Development Server
+#### 4. Run Development Server
 ```bash
-python manage.py runserver 8001
+python manage.py runserver 8000
 ```
 
-### 5. Access the Application
-- **Main App**: http://127.0.0.1:8001/
-- **Admin Interface**: http://127.0.0.1:8001/admin/ (if superuser created)
+#### 5. Access the Application
+- **Main App**: http://127.0.0.1:8000/
+- **Admin Interface**: http://127.0.0.1:8000/admin/ (if superuser created)
 
 ## 📖 Usage
 
