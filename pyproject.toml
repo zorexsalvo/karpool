@@ -1,0 +1,9 @@
+[project]
+name = "carpool"
+version = "0.1.0"
+description = "Carpool Management App - Django-based tool for organizing carpools"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.0.0",
+]
