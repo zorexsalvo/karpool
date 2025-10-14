@@ -114,33 +114,6 @@
 
     <!-- Right Sidebar - Forms -->
     <div class="space-y-4">
-        <!-- Add Car Form -->
-        <div class="mockup-window border bg-base-300">
-            <div class="flex flex-col px-4 py-3 bg-base-200">
-                <h3 class="font-semibold mb-3">Add Car</h3>
-                <form method="post" action="{% url 'add_car' event.slug %}" class="space-y-2">
-                    {% csrf_token %}
-                    <div class="form-control">
-                        <input type="text" name="driver_name" placeholder="Driver name" 
-                               class="input input-bordered" required>
-                    </div>
-                    <div class="form-control">
-                        <input type="text" name="car_name" placeholder="Car name (optional)" 
-                               class="input input-bordered">
-                    </div>
-                    <div class="form-control">
-                        <input type="number" name="capacity" placeholder="Seats" min="1" 
-                               class="input input-bordered">
-                    </div>
-                    <div class="form-control">
-                        <textarea name="notes" placeholder="Notes (optional)" rows="2" 
-                                  class="textarea textarea-bordered resize-none"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full">Add Car</button>
-                </form>
-            </div>
-        </div>
-
         <!-- Join Event Form -->
         <div class="mockup-window border bg-base-300">
             <div class="flex flex-col px-4 py-3 bg-base-200">
@@ -164,6 +137,33 @@
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary w-full">Join</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Car Form -->
+        <div class="mockup-window border bg-base-300">
+            <div class="flex flex-col px-4 py-3 bg-base-200">
+                <h3 class="font-semibold mb-3">Add Car</h3>
+                <form method="post" action="{% url 'add_car' event.slug %}" class="space-y-2">
+                    {% csrf_token %}
+                    <div class="form-control">
+                        <input type="text" name="driver_name" placeholder="Driver name" 
+                               class="input input-bordered" required>
+                    </div>
+                    <div class="form-control">
+                        <input type="text" name="car_name" placeholder="Car name (optional)" 
+                               class="input input-bordered">
+                    </div>
+                    <div class="form-control">
+                        <input type="number" name="capacity" placeholder="Seats" min="1" 
+                               class="input input-bordered">
+                    </div>
+                    <div class="form-control">
+                        <textarea name="notes" placeholder="Notes (optional)" rows="2" 
+                                  class="textarea textarea-bordered resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Add Car</button>
                 </form>
             </div>
         </div>
