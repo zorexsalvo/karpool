@@ -16,45 +16,45 @@
                     
                     <div class="form-control">
                         <label class="label py-1" for="{{ form.name.id_for_label }}">
-                            <span class="label-text text-sm font-medium">Event Name *</span>
+                            <span class="label-text font-medium">Event Name *</span>
                         </label>
                         <input type="text" name="name" id="{{ form.name.id_for_label }}" 
-                               placeholder="Event name" class="input input-bordered input-sm" required>
+                               placeholder="Event name" class="input input-bordered" required>
                         {% for error in form.name.errors %}
                             <label class="label py-0">
-                                <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                                <span class="label-text-alt text-error">{{ error }}</span>
                             </label>
                         {% endfor %}
                     </div>
 
                     <div class="form-control">
                         <label class="label py-1" for="{{ form.date.id_for_label }}">
-                            <span class="label-text text-sm font-medium">Date</span>
+                            <span class="label-text font-medium">Date</span>
                         </label>
                         <input type="date" name="date" id="{{ form.date.id_for_label }}" 
-                               class="input input-bordered input-sm">
+                               class="input input-bordered">
                         {% for error in form.date.errors %}
                             <label class="label py-0">
-                                <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                                <span class="label-text-alt text-error">{{ error }}</span>
                             </label>
                         {% endfor %}
                     </div>
 
                     <div class="form-control">
                         <label class="label py-1" for="{{ form.location.id_for_label }}">
-                            <span class="label-text text-sm font-medium">Location</span>
+                            <span class="label-text font-medium">Location</span>
                         </label>
                         <input type="text" name="location" id="{{ form.location.id_for_label }}" 
-                               placeholder="Event location (optional)" class="input input-bordered input-sm">
+                               placeholder="Event location (optional)" class="input input-bordered">
                         {% for error in form.location.errors %}
                             <label class="label py-0">
-                                <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                                <span class="label-text-alt text-error">{{ error }}</span>
                             </label>
                         {% endfor %}
                     </div>
 
                     <div class="form-control mt-4">
-                        <button type="submit" class="btn btn-primary btn-sm">Create Event</button>
+                        <button type="submit" class="btn btn-primary">Create Event</button>
                     </div>
                 </form>
             </div>
