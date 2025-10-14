@@ -29,8 +29,8 @@
         <h2 class="text-lg font-semibold mb-3">Cars</h2>
         
         {% for car in cars %}
-        <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body p-4">
+        <div class="mockup-window border bg-base-300">
+            <div class="flex flex-col px-4 py-3 bg-base-200">
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <h3 class="font-semibold">{{ car.driver_name }}</h3>
@@ -54,12 +54,12 @@
                 </div>
                 
                 {% if car.notes %}
-                    <div class="text-base-content/70 text-xs mb-3 p-2 bg-base-200 rounded">{{ car.notes }}</div>
+                    <div class="text-base-content/70 text-xs mb-3 p-2 bg-base-300 rounded">{{ car.notes }}</div>
                 {% endif %}
                 
                 <div class="space-y-2">
                     {% for member in car.members.all %}
-                        <div class="flex justify-between items-center p-2 bg-base-200 rounded text-sm">
+                        <div class="flex justify-between items-center p-2 bg-base-300 rounded text-sm">
                             <div>
                                 <div class="font-medium">{{ member.name }}</div>
                                 {% if member.contact %}<div class="text-xs text-base-content/70">{{ member.contact }}</div>{% endif %}
@@ -81,21 +81,23 @@
             </div>
         </div>
         {% empty %}
-        <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body p-4 text-center text-base-content/50 text-sm">
-                <p>No cars added yet</p>
+        <div class="mockup-window border bg-base-300">
+            <div class="flex justify-center px-4 py-8 bg-base-200">
+                <div class="text-center text-base-content/50 text-sm">
+                    <p>No cars added yet</p>
+                </div>
             </div>
         </div>
         {% endfor %}
 
         <!-- Unassigned Members -->
         {% if unassigned_members %}
-        <div class="card bg-base-100 shadow-sm border border-base-300 mt-4">
-            <div class="card-body p-4">
+        <div class="mockup-window border bg-base-300 mt-4">
+            <div class="flex flex-col px-4 py-3 bg-base-200">
                 <h3 class="font-semibold mb-3">Unassigned Members</h3>
                 <div class="space-y-2">
                     {% for member in unassigned_members %}
-                        <div class="flex justify-between items-center p-2 bg-base-200 rounded text-sm">
+                        <div class="flex justify-between items-center p-2 bg-base-300 rounded text-sm">
                             <div>
                                 <div class="font-medium">{{ member.name }}</div>
                                 {% if member.contact %}<div class="text-xs text-base-content/70">{{ member.contact }}</div>{% endif %}
@@ -120,8 +122,8 @@
     <!-- Right Sidebar - Forms -->
     <div class="space-y-4">
         <!-- Add Car Form -->
-        <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body p-4">
+        <div class="mockup-window border bg-base-300">
+            <div class="flex flex-col px-4 py-3 bg-base-200">
                 <h3 class="font-semibold text-sm mb-3">Add Car</h3>
                 <form method="post" action="{% url 'add_car' event.slug %}" class="space-y-2">
                     {% csrf_token %}
@@ -147,8 +149,8 @@
         </div>
 
         <!-- Join Event Form -->
-        <div class="card bg-base-100 shadow-sm border border-base-300">
-            <div class="card-body p-4">
+        <div class="mockup-window border bg-base-300">
+            <div class="flex flex-col px-4 py-3 bg-base-200">
                 <h3 class="font-semibold text-sm mb-3">Join Event</h3>
                 <form method="post" action="{% url 'add_member' event.slug %}" class="space-y-2">
                     {% csrf_token %}

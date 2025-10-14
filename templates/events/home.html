@@ -4,58 +4,60 @@
 
 {% block content %}
 <div class="max-w-xl mx-auto">
-    <div class="card bg-base-100 shadow border border-base-300">
-        <div class="card-body p-6">
-            <h1 class="text-2xl font-bold mb-3">Create Carpool Event</h1>
-            
-            <p class="text-base-content/70 text-sm mb-4">Create a shareable carpool event. Anyone with the link can join and manage rides.</p>
-
-            <form method="post" class="space-y-3">
-                {% csrf_token %}
+    <div class="mockup-window border bg-base-300">
+        <div class="flex justify-center px-4 py-16 bg-base-200">
+            <div class="w-full max-w-md">
+                <h1 class="text-2xl font-bold mb-3 text-center">Create Carpool Event</h1>
                 
-                <div class="form-control">
-                    <label class="label py-1" for="{{ form.name.id_for_label }}">
-                        <span class="label-text text-sm font-medium">Event Name *</span>
-                    </label>
-                    <input type="text" name="name" id="{{ form.name.id_for_label }}" 
-                           placeholder="Event name" class="input input-bordered input-sm" required>
-                    {% for error in form.name.errors %}
-                        <label class="label py-0">
-                            <span class="label-text-alt text-error text-xs">{{ error }}</span>
-                        </label>
-                    {% endfor %}
-                </div>
+                <p class="text-base-content/70 text-sm mb-4 text-center">Create a shareable carpool event. Anyone with the link can join and manage rides.</p>
 
-                <div class="form-control">
-                    <label class="label py-1" for="{{ form.date.id_for_label }}">
-                        <span class="label-text text-sm font-medium">Date</span>
-                    </label>
-                    <input type="date" name="date" id="{{ form.date.id_for_label }}" 
-                           class="input input-bordered input-sm">
-                    {% for error in form.date.errors %}
-                        <label class="label py-0">
-                            <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                <form method="post" class="space-y-3">
+                    {% csrf_token %}
+                    
+                    <div class="form-control">
+                        <label class="label py-1" for="{{ form.name.id_for_label }}">
+                            <span class="label-text text-sm font-medium">Event Name *</span>
                         </label>
-                    {% endfor %}
-                </div>
+                        <input type="text" name="name" id="{{ form.name.id_for_label }}" 
+                               placeholder="Event name" class="input input-bordered input-sm" required>
+                        {% for error in form.name.errors %}
+                            <label class="label py-0">
+                                <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
 
-                <div class="form-control">
-                    <label class="label py-1" for="{{ form.location.id_for_label }}">
-                        <span class="label-text text-sm font-medium">Location</span>
-                    </label>
-                    <input type="text" name="location" id="{{ form.location.id_for_label }}" 
-                           placeholder="Event location (optional)" class="input input-bordered input-sm">
-                    {% for error in form.location.errors %}
-                        <label class="label py-0">
-                            <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                    <div class="form-control">
+                        <label class="label py-1" for="{{ form.date.id_for_label }}">
+                            <span class="label-text text-sm font-medium">Date</span>
                         </label>
-                    {% endfor %}
-                </div>
+                        <input type="date" name="date" id="{{ form.date.id_for_label }}" 
+                               class="input input-bordered input-sm">
+                        {% for error in form.date.errors %}
+                            <label class="label py-0">
+                                <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
 
-                <div class="form-control mt-4">
-                    <button type="submit" class="btn btn-primary btn-sm">Create Event</button>
-                </div>
-            </form>
+                    <div class="form-control">
+                        <label class="label py-1" for="{{ form.location.id_for_label }}">
+                            <span class="label-text text-sm font-medium">Location</span>
+                        </label>
+                        <input type="text" name="location" id="{{ form.location.id_for_label }}" 
+                               placeholder="Event location (optional)" class="input input-bordered input-sm">
+                        {% for error in form.location.errors %}
+                            <label class="label py-0">
+                                <span class="label-text-alt text-error text-xs">{{ error }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-control mt-4">
+                        <button type="submit" class="btn btn-primary btn-sm">Create Event</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
