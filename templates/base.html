@@ -19,13 +19,24 @@
     </style>
 </head>
 <body class="bg-base-100">
+    <div class="navbar bg-base-100 shadow-sm border-b border-base-300">
+        <div class="navbar-start">
+            <a href="{% url 'home' %}" class="btn btn-ghost text-xl font-bold text-primary">
+                Carpool
+            </a>
+        </div>
+        <div class="navbar-center">
+            <!-- Optional: Add center content here -->
+        </div>
+        <div class="navbar-end">
+            <!-- Optional: Add menu items here -->
+        </div>
+    </div>
+
     <div class="container mx-auto px-4 py-4 max-w-6xl">
-        <nav class="mb-6">
-            <a href="{% url 'home' %}" class="text-xl font-bold text-primary">Carpool</a>
-        </nav>
 
         {% if messages %}
-            <div class="mb-4">
+            <div class="mb-4 mt-6">
                 {% for message in messages %}
                     <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %} mb-2">
                         {{ message }}
