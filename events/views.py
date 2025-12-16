@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from .models import Event, Car, Member
 from .forms import EventCreateForm, CarCreateForm, MemberCreateForm, MemberUpdateForm
+import qrcode
+from io import BytesIO
 
 
 def home(request):
@@ -148,3 +150,30 @@ def delete_car(request, slug, car_id):
         messages.success(request, f'Car "{car_name}" removed from the event. Members were moved to unassigned.')
     
     return redirect('event_detail', slug=slug)
+
+
+def event_qr(request, slug):
+    """Generate QR code for the event URL."""
+    event = get_object_or_404(Event, slug=slug)
+    
+    # Build the absolute URL for the event
+    event_url = request.build_absolute_uri(reverse('event_detail', kwargs={'slug': slug}))
+    
+    # Generate QR code
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(event_url)
+    qr.make(fit=True)
+    
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    # Save to BytesIO buffer
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    buffer.seek(0)
+    
+    return HttpResponse(buffer, content_type='image/png')
