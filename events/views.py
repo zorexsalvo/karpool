@@ -25,10 +25,22 @@ def event_detail(request, slug):
     event = get_object_or_404(Event, slug=slug)
     
     # Get cars with their members
-    cars = Car.objects.filter(event=event).prefetch_related('members')
+    cars_queryset = Car.objects.filter(event=event).prefetch_related('members')
+    
+    # Sort cars: Cars first, then motorcycles with members, then motorcycles without members
+    cars = sorted(
+        cars_queryset,
+        key=lambda car: (
+            0 if (car.car_name or '').lower() != 'motorcycle' else (1 if car.members.count() > 0 else 2)
+        )
+    )
     
     # Get unassigned members
     unassigned_members = Member.objects.filter(event=event, car__isnull=True)
+    
+    # Count cars and motorcycles
+    car_count = sum(1 for car in cars if (car.car_name or '').lower() != 'motorcycle')
+    motorcycle_count = sum(1 for car in cars if (car.car_name or '').lower() == 'motorcycle')
     
     # Forms for adding new cars and members
     car_form = CarCreateForm()
@@ -38,6 +50,8 @@ def event_detail(request, slug):
         'event': event,
         'cars': cars,
         'unassigned_members': unassigned_members,
+        'car_count': car_count,
+        'motorcycle_count': motorcycle_count,
         'car_form': car_form,
         'member_form': member_form,
     }

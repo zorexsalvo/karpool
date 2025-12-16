@@ -31,6 +31,15 @@
             Join Event
         </button>
     </div>
+
+    <!-- Vehicle Count -->
+    {% if cars %}
+    <div class="flex gap-3 text-xs md:text-sm text-base-content/60 mb-2">
+        <span>🚗 {{ car_count }} Car{{ car_count|pluralize }}</span>
+        <span>•</span>
+        <span>🏍️ {{ motorcycle_count }} Motorcycle{{ motorcycle_count|pluralize }}</span>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Main Layout -->
@@ -79,6 +88,7 @@
                 {% endif %}
                 
                 <!-- Members List -->
+                {% if car.car_name|lower != 'motorcycle' or car.members.count > 0 %}
                 <div class="space-y-2">
                     <div class="text-xs md:text-sm font-semibold text-base-content/70 uppercase tracking-wide mb-2">
                         Passengers ({{ car.members.count }})
@@ -123,6 +133,7 @@
                         </div>
                     {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
         {% empty %}
