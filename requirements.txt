@@ -1,1 +1,2 @@
 Django>=5.0.0
+qrcode[pil]>=7.4.0
