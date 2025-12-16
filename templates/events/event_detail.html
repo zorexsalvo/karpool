@@ -4,80 +4,135 @@
 
 {% block content %}
 <!-- Event Header -->
-<div class="mb-5">
-    <h1 class="text-2xl font-bold mb-1">{{ event.name }}</h1>
+<div class="mb-3 md:mb-5">
+    <h1 class="text-xl md:text-2xl font-bold mb-1">{{ event.name }}</h1>
     
     {% if event.date or event.location %}
-    <div class="text-base-content/70 text-sm mb-3">
+    <div class="text-base-content/70 text-xs md:text-sm mb-2 md:mb-3">
         {% if event.date %}{{ event.date|date:"M d, Y" }}{% endif %}
         {% if event.date and event.location %} • {% endif %}
         {% if event.location %}{{ event.location }}{% endif %}
     </div>
     {% endif %}
 
-    <div class="flex gap-1 mb-4">
+    <div class="hidden md:flex md:flex-row gap-1 mb-3 md:mb-4">
         <input type="text" value="{{ request.build_absolute_uri }}" readonly 
-               id="event-url" class="input input-bordered flex-1 font-mono">
-        <button onclick="copyUrl()" class="btn btn-outline">Copy</button>
+               id="event-url" class="input input-bordered input-sm md:input-md flex-1 font-mono text-xs md:text-sm">
+        <button onclick="copyUrl()" class="btn btn-outline btn-sm md:btn-md">Copy</button>
+    </div>
+
+    <!-- Mobile Join Event Button -->
+    <div class="md:hidden mb-3">
+        <button onclick="document.getElementById('join-event-form').scrollIntoView({behavior: 'smooth'})" 
+                class="btn btn-primary btn-sm w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m0 0l-4-4m4 4l4-4" />
+            </svg>
+            Join Event
+        </button>
     </div>
 </div>
 
 <!-- Main Layout -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
     <!-- Cars List - Left Side (2/3 width) -->
-    <div class="lg:col-span-2 space-y-3">
+    <div class="lg:col-span-2 space-y-2 md:space-y-3">
         {% for car in cars %}
-        <div class="mockup-window border bg-base-300">
-            <div class="flex flex-col px-4 py-3 bg-base-200">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-semibold">{{ car.driver_name }}</h3>
-                            {% if car.capacity %}
-                                <span class="text-base-content/70 text-sm">{{ car.members.count }}/{{ car.capacity }}</span>
+        <div class="card bg-base-200 shadow-md md:mockup-window md:border md:bg-base-300">
+            <div class="flex flex-col px-3 py-3 md:px-4 md:py-4 md:bg-base-200">
+                <!-- Car Header -->
+                <div class="flex items-center justify-between mb-3 pb-2 border-b border-base-300">
+                    <div class="flex items-center gap-3">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-bold text-sm md:text-lg">{{ car.driver_name }}</h3>
+                                <div class="badge badge-sm md:badge-md badge-primary">Driver</div>
+                            </div>
+                            {% if car.car_name %}
+                                <p class="text-base-content/70 text-xs md:text-sm flex items-center gap-1 mt-0.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                    </svg>
+                                    {{ car.car_name }}
+                                </p>
                             {% endif %}
                         </div>
-                        {% if car.car_name %}<p class="text-base-content/70 text-sm">{{ car.car_name }}</p>{% endif %}
                     </div>
-                    <form method="post" action="{% url 'delete_car' event.slug car.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-ghost text-error" 
-                                onclick="return confirm('Delete car?')">×</button>
-                    </form>
+                    <div class="flex items-center gap-2">
+
+                        <form method="post" action="{% url 'delete_car' event.slug car.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-ghost btn-xs md:btn-sm text-error" 
+                                    onclick="return confirm('Delete this car?')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 
                 {% if car.notes %}
-                    <div class="text-base-content/70 mb-3 p-2 bg-base-300 rounded">{{ car.notes }}</div>
+                    <div class="alert alert-info py-2 px-3 mb-3 text-xs md:text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-4 h-4 md:w-5 md:h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>{{ car.notes }}</span>
+                    </div>
                 {% endif %}
                 
+                <!-- Members List -->
                 <div class="space-y-2">
+                    <div class="text-xs md:text-sm font-semibold text-base-content/70 uppercase tracking-wide mb-2">
+                        Passengers ({{ car.members.count }})
+                    </div>
                     {% for member in car.members.all %}
-                        <div class="flex justify-between items-center p-2 bg-base-300 rounded">
-                            <div>
-                                <div class="font-medium">{{ member.name }}</div>
-                                {% if member.contact %}<div class="text-base-content/70">{{ member.contact }}</div>{% endif %}
+                        <div class="flex items-center justify-between p-2.5 md:p-3 bg-base-300 rounded-lg hover:bg-base-300/70 transition-colors">
+                            <div class="flex items-center gap-2.5 md:gap-3 min-w-0 flex-1">
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-semibold text-xs md:text-sm truncate">{{ member.name }}</div>
+                                    {% if member.contact %}
+                                        <div class="text-base-content/60 text-[10px] md:text-xs truncate flex items-center gap-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                            {{ member.contact }}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="flex gap-1">
                                 <button onclick="showMoveModal({{ member.id }}, '{{ member.name }}')" 
-                                        class="btn btn-ghost">Move</button>
+                                        class="btn btn-ghost btn-xs md:btn-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                    </svg>
+                                </button>
                                 <form method="post" action="{% url 'delete_member' event.slug member.id %}" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-ghost text-error" 
-                                            onclick="return confirm('Remove {{ member.name }}?')">×</button>
+                                    <button type="submit" class="btn btn-ghost btn-xs md:btn-sm text-error" 
+                                            onclick="return confirm('Remove {{ member.name }}?')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </form>
                             </div>
                         </div>
-                    {% empty %}
-                        <div class="text-center text-base-content/50 py-3">No members in this car yet</div>
                     {% endfor %}
+                    {% if car.members.count == 0 %}
+                        <div class="hidden md:block text-center py-4 text-base-content/50 text-xs md:text-sm">
+                            No passengers yet
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="mockup-window border bg-base-300">
-            <div class="flex justify-center px-4 py-8 bg-base-200">
+        <div class="card bg-base-200 md:mockup-window md:border md:bg-base-300">
+            <div class="flex justify-center px-3 py-6 md:px-4 md:py-8 md:bg-base-200">
                 <div class="text-center text-base-content/50">
-                    <p>No cars added yet</p>
+                    <p class="text-sm md:text-base">No cars added yet</p>
                 </div>
             </div>
         </div>
@@ -85,22 +140,22 @@
 
         <!-- Unassigned Members -->
         {% if unassigned_members %}
-        <div class="mockup-window border bg-base-300 mt-4">
-            <div class="flex flex-col px-4 py-3 bg-base-200">
-                <h3 class="font-semibold mb-3">Unassigned Members</h3>
-                <div class="space-y-2">
+        <div class="card bg-base-200 md:mockup-window md:border md:bg-base-300 mt-3 md:mt-4">
+            <div class="flex flex-col px-3 py-2 md:px-4 md:py-3 md:bg-base-200">
+                <h3 class="font-semibold mb-2 md:mb-3 text-sm md:text-base">Unassigned Members</h3>
+                <div class="space-y-1.5 md:space-y-2">
                     {% for member in unassigned_members %}
                         <div class="flex justify-between items-center p-2 bg-base-300 rounded">
-                            <div>
-                                <div class="font-medium">{{ member.name }}</div>
-                                {% if member.contact %}<div class="text-base-content/70">{{ member.contact }}</div>{% endif %}
+                            <div class="min-w-0 flex-1">
+                                <div class="font-medium text-sm md:text-base truncate">{{ member.name }}</div>
+                                {% if member.contact %}<div class="text-base-content/70 text-xs md:text-sm truncate">{{ member.contact }}</div>{% endif %}
                             </div>
-                            <div class="flex gap-1">
+                            <div class="flex gap-1 ml-2">
                                 <button onclick="showMoveModal({{ member.id }}, '{{ member.name }}')" 
-                                        class="btn btn-ghost">Assign</button>
+                                        class="btn btn-ghost btn-xs md:btn-sm">Assign</button>
                                 <form method="post" action="{% url 'delete_member' event.slug member.id %}" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-ghost text-error" 
+                                    <button type="submit" class="btn btn-ghost btn-xs md:btn-sm text-error" 
                                             onclick="return confirm('Remove {{ member.name }}?')">×</button>
                                 </form>
                             </div>
@@ -113,57 +168,53 @@
     </div>
 
     <!-- Right Sidebar - Forms -->
-    <div class="space-y-4">
+    <div class="space-y-3 md:space-y-4">
         <!-- Join Event Form -->
-        <div class="mockup-window border bg-base-300">
-            <div class="flex flex-col px-4 py-3 bg-base-200">
-                <h3 class="font-semibold mb-3">Join Event</h3>
+        <div id="join-event-form" class="card bg-base-200 md:mockup-window md:border md:bg-base-300">
+            <div class="flex flex-col px-3 py-2 md:px-4 md:py-3 md:bg-base-200">
+                <h3 class="font-semibold mb-2 md:mb-3 text-sm md:text-base">Join Event</h3>
                 <form method="post" action="{% url 'add_member' event.slug %}" class="space-y-2">
                     {% csrf_token %}
                     <div class="form-control">
                         <input type="text" name="name" placeholder="Your name" 
-                               class="input input-bordered" required>
+                               class="input input-bordered input-sm md:input-md text-sm md:text-base" required>
                     </div>
                     <div class="form-control">
                         <input type="text" name="contact" placeholder="Contact (optional)" 
-                               class="input input-bordered">
+                               class="input input-bordered input-sm md:input-md text-sm md:text-base">
                     </div>
                     <div class="form-control">
-                        <select name="car" class="select select-bordered">
+                        <select name="car" class="select select-bordered select-sm md:select-md text-sm md:text-base">
                             <option value="">No car yet</option>
                             {% for car in cars %}
                                 <option value="{{ car.id }}">{{ car.driver_name }}{% if car.car_name %} ({{ car.car_name }}){% endif %}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary w-full">Join</button>
+                    <button type="submit" class="btn btn-primary btn-sm md:btn-md w-full">Join</button>
                 </form>
             </div>
         </div>
 
         <!-- Add Car Form -->
-        <div class="mockup-window border bg-base-300">
-            <div class="flex flex-col px-4 py-3 bg-base-200">
-                <h3 class="font-semibold mb-3">Add Car</h3>
+        <div class="card bg-base-200 md:mockup-window md:border md:bg-base-300">
+            <div class="flex flex-col px-3 py-2 md:px-4 md:py-3 md:bg-base-200">
+                <h3 class="font-semibold mb-2 md:mb-3 text-sm md:text-base">Add Car</h3>
                 <form method="post" action="{% url 'add_car' event.slug %}" class="space-y-2">
                     {% csrf_token %}
                     <div class="form-control">
                         <input type="text" name="driver_name" placeholder="Driver name" 
-                               class="input input-bordered" required>
+                               class="input input-bordered input-sm md:input-md text-sm md:text-base" required>
                     </div>
                     <div class="form-control">
                         <input type="text" name="car_name" placeholder="Car name (optional)" 
-                               class="input input-bordered">
-                    </div>
-                    <div class="form-control">
-                        <input type="number" name="capacity" placeholder="Seats" min="1" 
-                               class="input input-bordered">
+                               class="input input-bordered input-sm md:input-md text-sm md:text-base">
                     </div>
                     <div class="form-control">
                         <textarea name="notes" placeholder="Notes (optional)" rows="2" 
-                                  class="textarea textarea-bordered resize-none"></textarea>
+                                  class="textarea textarea-bordered textarea-sm md:textarea-md resize-none text-sm md:text-base"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary w-full">Add Car</button>
+                    <button type="submit" class="btn btn-primary btn-sm md:btn-md w-full">Add Car</button>
                 </form>
             </div>
         </div>
@@ -172,15 +223,15 @@
 
 <!-- Move Member Modal -->
 <dialog id="moveModal" class="modal">
-    <div class="modal-box">
-        <h3 class="font-semibold mb-3" id="modalTitle">Move Member</h3>
-        <form method="post" id="moveForm" class="space-y-3">
+    <div class="modal-box max-w-sm">
+        <h3 class="font-semibold mb-2 md:mb-3 text-sm md:text-base" id="modalTitle">Move Member</h3>
+        <form method="post" id="moveForm" class="space-y-2 md:space-y-3">
             {% csrf_token %}
             <div class="form-control">
                 <label class="label py-1">
-                    <span class="label-text">Assign to:</span>
+                    <span class="label-text text-xs md:text-sm">Assign to:</span>
                 </label>
-                <select name="car" id="carSelect" class="select select-bordered">
+                <select name="car" id="carSelect" class="select select-bordered select-sm md:select-md text-sm md:text-base">
                     <option value="">Unassigned</option>
                     {% for car in cars %}
                         <option value="{{ car.id }}">{{ car.driver_name }}{% if car.car_name %} ({{ car.car_name }}){% endif %}</option>
@@ -188,8 +239,8 @@
                 </select>
             </div>
             <div class="modal-action pt-2">
-                <button type="button" onclick="hideMoveModal()" class="btn">Cancel</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" onclick="hideMoveModal()" class="btn btn-sm md:btn-md">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm md:btn-md">Update</button>
             </div>
         </form>
     </div>
