@@ -19,6 +19,7 @@
         <input type="text" value="{{ request.build_absolute_uri }}" readonly 
                id="event-url" class="input input-bordered input-sm md:input-md flex-1 font-mono text-xs md:text-sm">
         <button onclick="copyUrl()" class="btn btn-outline btn-sm md:btn-md">Copy</button>
+        <button onclick="showQRModal()" class="btn btn-outline btn-sm md:btn-md">Show QR</button>
     </div>
 
     <!-- Mobile Join Event Button -->
@@ -265,6 +266,21 @@
     </form>
 </dialog>
 
+<!-- QR Code Modal -->
+<dialog id="qrModal" class="modal">
+    <div class="modal-box max-w-md text-center">
+        <h3 class="font-semibold mb-4 text-base md:text-lg">Event QR Code</h3>
+        <img src="{% url 'event_qr' event.slug %}" alt="Event QR Code" class="mx-auto mb-4">
+        <p class="text-sm text-base-content/70 mb-4">Scan to join {{ event.name }}</p>
+        <div class="modal-action">
+            <button type="button" onclick="hideQRModal()" class="btn btn-sm md:btn-md">Close</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
 {% endblock %}
 
 {% block scripts %}
@@ -294,6 +310,14 @@ function showMoveModal(memberId, memberName) {
 
 function hideMoveModal() {
     document.getElementById('moveModal').close();
+}
+
+function showQRModal() {
+    document.getElementById('qrModal').showModal();
+}
+
+function hideQRModal() {
+    document.getElementById('qrModal').close();
 }
 </script>
 {% endblock %}
