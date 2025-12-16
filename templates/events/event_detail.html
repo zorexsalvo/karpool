@@ -47,8 +47,8 @@
     <!-- Cars List - Left Side (2/3 width) -->
     <div class="lg:col-span-2 space-y-2 md:space-y-3">
         {% for car in cars %}
-        <div class="card bg-base-200 shadow-md md:mockup-window md:border md:bg-base-300">
-            <div class="flex flex-col px-3 py-3 md:px-4 md:py-4 md:bg-base-200">
+        <div class="card {% if car.car_name|lower == 'motorcycle' %}bg-base-300{% else %}bg-base-200{% endif %} shadow-md md:mockup-window md:border md:bg-base-300">
+            <div class="flex flex-col px-3 py-3 md:px-4 md:py-4 {% if car.car_name|lower == 'motorcycle' %}md:bg-base-300{% else %}md:bg-base-200{% endif %}">
                 <!-- Car Header -->
                 <div class="flex items-center justify-between mb-3 pb-2 border-b border-base-300">
                     <div class="flex items-center gap-3">
