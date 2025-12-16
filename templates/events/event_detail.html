@@ -276,9 +276,9 @@
 <!-- QR Code Modal -->
 <dialog id="qrModal" class="modal">
     <div class="modal-box max-w-md text-center">
-        <h3 class="font-semibold mb-4 text-base md:text-lg">Event QR Code</h3>
-        <img src="{% url 'event_qr' event.slug %}" alt="Event QR Code" class="mx-auto mb-4">
-        <p class="text-sm text-base-content/70 mb-4">Scan to join {{ event.name }}</p>
+        <h3 class="font-semibold mb-4 text-base md:text-lg">Carpool Arrangement QR Code</h3>
+        <img src="{% url 'event_qr' event.slug %}" alt="Carpool Arrangement QR Code" class="mx-auto mb-4">
+        <p class="text-sm text-base-content/70 mb-4">Scan to access carpool arrangement for {{ event.name }}</p>
         <div class="modal-action">
             <button type="button" onclick="hideQRModal()" class="btn btn-sm md:btn-md">Close</button>
         </div>

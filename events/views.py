@@ -153,7 +153,7 @@ def delete_car(request, slug, car_id):
 
 
 def event_qr(request, slug):
-    """Generate QR code for the event URL."""
+    """Generate QR code for the carpool arrangement page (not event poll)."""
     event = get_object_or_404(Event, slug=slug)
     
     # Build the absolute URL for the event
